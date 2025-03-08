@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreFormRequest;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-   public function store(Request $request){
+   public function store(StoreFormRequest $request){
 
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email|max:255',
-        'phone' => 'required|digits_between:10,15',
-        'message' => 'required|string|max:1000',
-    ]);
+    // $validated = $request->validate([
+    //     'name' => 'required|string|max:255',
+    //     'email' => 'required|email',
+    //     'phone' => 'required',
+    //     'message' => 'required|string|max:1000',
+    // ]);
 
+    $validated = $request->validated();
 
     $contactData = Contact::create($validated);
 
