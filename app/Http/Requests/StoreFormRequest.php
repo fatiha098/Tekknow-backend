@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreFormRequest extends FormRequest
 {
@@ -28,6 +30,30 @@ class StoreFormRequest extends FormRequest
             "message" => "required",
         ];
     }
+    public function messages()
+    {
+        return [
+            'name.required' => 'name is required',
+            'email.required' => 'email is required',
+            'email.email' => 'enter a valid address email',
+            'message.required' => 'message is required',
+        ];
+    }
+
+    protected function handleInternalServerError()
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'An internal server error occurred. Please try again later.'
+        ], 500));
+    }
+
+    protected function validationFailed(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'errors' => $validator->errors(),
+        ],422));
+    }
 }
 
-// "email" => [ "required", "email", Rule::unique("feedBack::class")]
