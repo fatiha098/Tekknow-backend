@@ -28,16 +28,6 @@ class StoreFormRequest extends FormRequest
             "message" => "required",
         ];
     }
-    public function messages(): array
-    {
-        return [
-            "name.required" => "name field is required",
-            "email.required" => "email field is required",
-            "phone.required" => "phone field is required",
-            "message.required" => "message field is required",
-        ];
-    }
-
-
-
 }
+
+// "email" => [ "required", "email", Rule::unique("feedBack::class")]

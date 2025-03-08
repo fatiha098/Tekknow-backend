@@ -1,10 +1,9 @@
 <?php
 
-use App\Http\Controllers\ContactController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\FeedBackController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/submit-form', [ContactController::class, 'store']);
+Route::post('/submit-form', [FeedBackController::class, 'store']);
 
 
 

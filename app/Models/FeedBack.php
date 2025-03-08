@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Contact extends Model
+class FeedBack extends Model
 {
     protected $fillable = [
         'name',
@@ -14,3 +14,4 @@ class Contact extends Model
 
     ];
 }
+
