@@ -26,17 +26,18 @@ class StoreFormRequest extends FormRequest
         return [
             "name" => "required|string",
             "email" => "required|email",
-            "phone" => "required",
-            "message" => "required",
+            "phone" => "required|string|max:20",
+            "message" => "required|string|min:20",
         ];
     }
     public function messages()
     {
         return [
-            'name.required' => 'name is required',
+            'name.required' => 'Name is required',
             'email.required' => 'email is required',
-            'email.email' => 'enter a valid address email',
+            'email.email' => 'Please enter a valid email address',
             'message.required' => 'message is required',
+            'message.min' => 'message must be at least 20 caracters',
         ];
     }
 
@@ -48,7 +49,7 @@ class StoreFormRequest extends FormRequest
         ], 500));
     }
 
-    protected function validationFailed(Validator $validator)
+    protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
             'success' => false,
