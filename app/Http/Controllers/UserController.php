@@ -14,27 +14,7 @@ class UserController extends Controller
     public function index()
     {   
         $users = User::all();
-        return view('users.index', compact('users'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('users.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreUserRequest $request)
-    {
-        $user = $request->validated();
-
-        User::create($user);
-
-        return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès !');
+        return response()->json($users, 201);
     }
 
     /**
@@ -42,15 +22,8 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        $user = User::findOrFail($id);
+        return response()->json($user, 201); 
     }
 
     /**
@@ -58,7 +31,17 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'nullable|string',
+        ]);
+
+        $user->update($request->only('name', 'email', 'password'));
+
+        return response()->json($user);
     }
 
     /**
@@ -66,6 +49,9 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return response()->json(['message' => 'User deleted successfully']);
     }
 }

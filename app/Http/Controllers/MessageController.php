@@ -12,15 +12,8 @@ class MessageController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $messages = Message::all();
+        return response()->json($messages);
     }
 
     /**
@@ -28,38 +21,70 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'message' => 'required|string',
+            'sender_id' => 'required|exists:users,id',
+            'receiver_id' => 'required|exists:users,id',
+        ]);
+
+        $message = Message::create($validated);
+
+        return response()->json($message, 201);
+
+    }
+
+    public function showMessagesBetweenUsers($senderId, $receiverId)
+    {
+        $messages = Message::where(function ($query) use ($senderId, $receiverId) {
+            $query->where('sender_id', $senderId)
+                  ->where('receiver_id', $receiverId);
+        })->orWhere(function ($query) use ($senderId, $receiverId) {
+            $query->where('sender_id', $receiverId)
+                  ->where('receiver_id', $senderId);
+        })->orderBy('created_at', 'asc')->get();
+
+        return response()->json($messages);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Message $message)
+    public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Message $message)
-    {
-        //
+        $message = Message::findOrFail($id);
+        return response()->json($message);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Message $message)
+    public function update(Request $request, $id)
     {
-        //
+        $validated = $request->validate([
+            'message' => 'required|string|max:1000',
+        ]);
+
+        $message = Message::findOrFail($id);
+        $message->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Message updated successfully.',
+            'data' => $message
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Message $message)
+    public function destroy($id)
     {
-        //
+        $message = Message::findOrFail($id);
+        $message->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Message deleted successfully.'
+        ]);
     }
 }
