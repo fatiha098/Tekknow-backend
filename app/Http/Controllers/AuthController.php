@@ -22,13 +22,11 @@ class AuthController extends Controller
         // return response()->json($user, 201);
         
         $request->validate([
-            'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string',
         ]);
 
         $user = User::create([
-            'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
@@ -56,6 +54,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
+            'userLoggedIn'=> $user
         ]);
     }
 
