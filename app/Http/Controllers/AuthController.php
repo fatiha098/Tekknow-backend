@@ -13,20 +13,13 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         
-        // $validated = $request->validated();
-
-        // $validated['password'] = bcrypt($validated['password']);
-
-        // $user = User::create($validated);
-
-        // return response()->json($user, 201);
-        
         $request->validate([
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string',
         ]);
 
         $user = User::create([
+            "name" => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
