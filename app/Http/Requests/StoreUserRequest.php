@@ -25,14 +25,15 @@ class StoreUserRequest extends FormRequest
             'name' => "required|string",
             'email' => 'required|email',
             'password' => 'required|string',
-
         ];
     }
 
     public function messages(): array
     {
         return [
+            'name.required' => "name is require",
+            'email.required' => 'email is required',
+            'password.required' => 'password is required',
         ];
     }
-    
 }

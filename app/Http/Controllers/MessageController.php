@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\Message;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -28,8 +30,11 @@ class MessageController extends Controller
         ]);
 
         $message = Message::create($validated);
+        
+        // Broadcast the event
+        broadcast(new MessageSent($message->message, $message->sender_id, $message->receiver_id));
 
-        return response()->json($message, 201);
+        return response()->json($message, 200);
 
     }
 
