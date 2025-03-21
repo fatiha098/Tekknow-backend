@@ -32,8 +32,7 @@ class MessageController extends Controller
         $message = Message::create($validated);
         
         // Broadcast the event
-        broadcast(new NewMessage($message->message, $message->sender_id, $message->receiver_id));
-
+        broadcast(new NewMessage($message->message, $message->sender_id, $message->receiver_id))->toOthers();        
         return response()->json($message, 200);
 
     }
